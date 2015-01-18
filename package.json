@@ -1,0 +1,34 @@
+{
+  "name": "sceitse",
+  "version": "0.0.0",
+  "description": "Simple HTML Canvas sketching web-app",
+  "main": "index.js",
+  "scripts": {
+    "test": "cake test",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/bjjb/sceitse"
+  },
+  "keywords": [
+    "canvas",
+    "webapp",
+    "sketch",
+    "doodle"
+  ],
+  "author": "bjjb",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bjjb/sceitse/issues"
+  },
+  "homepage": "https://github.com/bjjb/sceitse",
+  "dependencies": {
+    "coffee-script": "^1.8.0",
+    "express": "^4.11.0",
+    "jade": "^1.9.1",
+    "morgan": "^1.5.1",
+    "nib": "^1.0.4",
+    "stylus": "^0.49.3"
+  }
+}
