@@ -1,6 +1,6 @@
 {
   "name": "sceitse",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Simple HTML Canvas sketching web-app",
   "main": "index.js",
   "scripts": {
