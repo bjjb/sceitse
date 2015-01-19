@@ -1,10 +1,8 @@
-Sceitse = (element) ->
+Sceitse = (element, options = {}) ->
   canvas = document.createElement('canvas')
   element.appendChild(canvas)
 
-  MARGIN = 15
   [_painting, _savepoints, _x, _y, _d] = [false, [], [], [], []]
-  context = canvas.getContext('2d')
 
   mouseup = (event) ->
     _painting = false
@@ -40,6 +38,7 @@ Sceitse = (element) ->
     redraw()
 
   redraw = ->
+    context = canvas.getContext('2d')
     context.clearRect(0, 0, canvas.width, canvas.height)
     context.strokeStyle = 'green'
     context.lineJoin = 'round'
@@ -56,6 +55,7 @@ Sceitse = (element) ->
       context.stroke()
 
   drawImage = (data) ->
+    context = canvas.getContext('2d')
     image = new Image(canvas.width, canvas.height)
     image.src = data
     context.clearRect(0, 0, canvas.width, canvas.height)
@@ -69,10 +69,6 @@ Sceitse = (element) ->
     _d = _d[0...savepoint]
     redraw()
 
-  resize = (width, height) ->
-    canvas.width = window.innerWidth - MARGIN * 2
-    canvas.height = window.innerHeight - MARGIN * 2
-
   if Modernizr.touch and navigator.maxTouchPoints isnt 0
     canvas.addEventListener('touchstart', touchstart)
     canvas.addEventListener('touchmove', touchmove)
@@ -83,14 +79,22 @@ Sceitse = (element) ->
     canvas.addEventListener('mouseup', mouseup)
     canvas.addEventListener('mouseleave', mouseleave)
 
+  resize = ->
+    padding = options.padding or 15
+    element.style.padding = "#{padding}px"
+    canvas.width = window.innerWidth - padding * 2
+    canvas.height = window.innerHeight - padding * 2
+    redraw()
+
+  window.addEventListener 'resize', resize
+  resize()
+
   x: _x
   y: _y
   d: _d
   getData: -> canvas.toDataURL()
   setData: drawImage
   undo: undo
-  resize: resize
 
 document.addEventListener 'DOMContentLoaded', ->
-  sceitse = new Sceitse(@querySelector('#sceitse'))
-  sceitse.resize()
+  sceitse = new Sceitse(@querySelector('#sceitse'), padding: 15)
