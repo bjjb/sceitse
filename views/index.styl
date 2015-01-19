@@ -1,17 +1,21 @@
+// General styles
 body
-  margin 2em
+  padding 0
+  margin 0
+#sceitse
+  position relative
+  display block
+  height 100%
   color #555
   font-family sans-serif
   background-color cornsilk
+  canvas
+    display block
+    margin auto
+    margin 15px
+    background-color white
+    box-shadow 0px 2px 10px 1px rgba(0, 0, 0, 0.4)
+    cursor crosshair
 
-canvas#sceitse
-  display block
-  margin auto
-  background-color white
-  box-shadow 0px 2px 10px 1px rgba(0, 0, 0, 0.4)
-  cursor crosshair
-
-.touch-enabled
-  canvas#sceite
-    width 100%
-    height 100%
+// Overrides for touch-enabled devices
+//@media (max-width: 320px)

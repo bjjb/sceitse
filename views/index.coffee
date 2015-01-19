@@ -1,46 +1,37 @@
+Sceitse = (element) ->
+  canvas = document.createElement('canvas')
+  element.appendChild(canvas)
 
-Sceitse = (canvas) ->
+  MARGIN = 15
   [_painting, _savepoints, _x, _y, _d] = [false, [], [], [], []]
+  context = canvas.getContext('2d')
 
   mouseup = (event) ->
-    return if touchAvailable
     _painting = false
-    canvas.classList.remove 'painting'
 
   mouseleave = (event) ->
-    return if touchAvailable
     _painting = false
-    canvas.classList.remove 'painting'
 
   mousedown = (event) ->
-    return if touchAvailable
     _painting = true
     _savepoints.push(_x.length)
-    canvas.classList.add 'painting'
     [x, y] = [event.pageX - @offsetLeft, event.pageY - @offsetTop]
     paint(x, y)
 
   mousemove = (event) ->
-    return if touchAvailable
     return unless _painting
     [x, y] = [event.pageX - @offsetLeft, event.pageY - @offsetTop]
     paint(x, y, true)
 
   touchstart = (event) ->
-    return unless touchAvailable
-    _painting = true
-    canvas.classList.add 'painting'
-    console.log "TOUCH START", event
-
+    mousedown.call(@, touch) for touch in event.touches
+    
   touchmove = (event) ->
-    return unless touchAvailable
-    console.log "TOUCH MOVE", event
+    event.preventDefault()
+    mousemove.call(@, touch) for touch in event.touches
 
   touchend = (event) ->
-    return unless touchAvailable
-    _painting = false
-    canvas.classList.remove 'painting'
-    console.log "TOUCH END", event
+    mouseup.call(@, touch) for touch in event.touches
 
   paint = (x, y, d = false) ->
     _x.push(x)
@@ -48,13 +39,11 @@ Sceitse = (canvas) ->
     _d.push(d)
     redraw()
 
-  context = canvas.getContext('2d')
-  context.strokeStyle = 'green'
-  context.lineJoin = 'round'
-  context.lineWidth = 5
-
   redraw = ->
     context.clearRect(0, 0, canvas.width, canvas.height)
+    context.strokeStyle = 'green'
+    context.lineJoin = 'round'
+    context.lineWidth = 5
     max = _x.length
     for i in [0...max]
       context.beginPath()
@@ -81,16 +70,18 @@ Sceitse = (canvas) ->
     redraw()
 
   resize = (width, height) ->
-    canvas.width = window.innerWidth
-    canvas.height = window.innerHeight
+    canvas.width = window.innerWidth - MARGIN * 2
+    canvas.height = window.innerHeight - MARGIN * 2
 
-  canvas.addEventListener('mousedown', mousedown)
-  canvas.addEventListener('mousemove', mousemove)
-  canvas.addEventListener('mouseup', mouseup)
-  canvas.addEventListener('mouseleave', mouseleave)
-  canvas.addEventListener('touchstart', touchstart)
-  canvas.addEventListener('touchmove', touchmove)
-  canvas.addEventListener('touchend', touchend)
+  if Modernizr.touch and navigator.maxTouchPoints isnt 0
+    canvas.addEventListener('touchstart', touchstart)
+    canvas.addEventListener('touchmove', touchmove)
+    canvas.addEventListener('touchend', touchend)
+  else
+    canvas.addEventListener('mousedown', mousedown)
+    canvas.addEventListener('mousemove', mousemove)
+    canvas.addEventListener('mouseup', mouseup)
+    canvas.addEventListener('mouseleave', mouseleave)
 
   x: _x
   y: _y
@@ -100,9 +91,6 @@ Sceitse = (canvas) ->
   undo: undo
   resize: resize
 
-touchAvailable = 'ontouchstart' in window
 document.addEventListener 'DOMContentLoaded', ->
-  touchAvailable = window.ontouchstart isnt undefined
-  sceitse = new Sceitse(@querySelector('canvas#sceitse'))
-  console.log touchAvailable
-window.Sceitse = Sceitse
+  sceitse = new Sceitse(@querySelector('#sceitse'))
+  sceitse.resize()
