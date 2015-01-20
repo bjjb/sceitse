@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/bjjb/sceitse",
   "dependencies": {
+    "blueimp-md5": "^1.1.0",
     "coffee-script": "^1.8.0",
     "express": "^4.11.0",
     "jade": "^1.9.1",

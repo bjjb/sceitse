@@ -41,5 +41,4 @@ var server = app.listen(process.env.PORT || 3000, function() {
   var host = server.address().address
   var port = server.address().port
   console.log("%s v%s listening at %s:%s", name, version, host, port)
-  var version = pkg.version
 })
